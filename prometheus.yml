@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: jaeger-spanmetrics
+    static_configs:
+      - targets: ['jaeger:8889']
+
+  - job_name: llm-service-metrics
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:9464']

@@ -1,0 +1,52 @@
+services:
+  jaeger:
+    image: jaegertracing/jaeger:latest
+    environment:
+      - JAEGER_LISTEN_HOST=0.0.0.0
+    command: ["--config", "/etc/jaeger/config.yaml"]
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+      - "8889:8889"
+    volumes:
+      - ./jaeger-config.yaml:/etc/jaeger/config.yaml:ro
+      - ./jaeger-ui-config.json:/etc/jaeger/ui-config.json:ro
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./dashboards/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./dashboards/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./dashboards/grafana:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - jaeger
+      - loki
+      - prometheus
+
+volumes:
+  grafana-data:
+  loki-data:

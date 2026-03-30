@@ -1,0 +1,9 @@
+{
+  "themes": {
+    "enabled": true
+  },
+  "monitor": {
+    "menuEnabled": true,
+    "docsLink": "https://www.jaegertracing.io/docs/2.16/architecture/spm/"
+  }
+}
