@@ -218,6 +218,12 @@ curl -s http://localhost:3000/feedback \
 
 ---
 
+## Article
+
+A detailed walkthrough of every pattern in this repo: [article.md](./article.md)
+
+---
+
 If you are new to OpenTelemetry, start by reading these files in order:
 
 1. [src/observabilty/instrumentation.ts](src/observabilty/instrumentation.ts)
